@@ -1,6 +1,37 @@
 ---
-name: deployless-delivery-model-audit-any-language
-description: Use this skill first when adapting a repository in any language toward deployless-style deployment, single-main-branch development, runtime release controls, automatic deployment from main, or production-trace-driven iteration.
+name: deployless-audit
+description: Deployless delivery-model audit. Use first when adapting any repository toward single-mainline development, automatic deployment from main, runtime release controls, production-trace-driven iteration, AI PR governance, or multi-agent delivery workflows.
+metadata:
+  priority: 6
+  docs:
+    - "https://trunkbaseddevelopment.com/"
+    - "https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development"
+  pathPatterns:
+    - ".github/workflows/**"
+    - ".gitlab-ci.yml"
+    - "Jenkinsfile"
+    - "CONTRIBUTING.md"
+    - "CODEOWNERS"
+    - "docs/**"
+    - "README.md"
+  promptSignals:
+    phrases:
+      - "deployless"
+      - "single mainline"
+      - "trunk based"
+      - "continuous deployment"
+      - "runtime release controls"
+      - "ai pr governance"
+    allOf:
+      - [delivery, audit]
+      - [mainline, deploy]
+    anyOf:
+      - "feature flags"
+      - "merge queue"
+      - "production traces"
+      - "agent workflow"
+    noneOf: []
+    minScore: 5
 ---
 
 # Delivery Model Audit for Any-Language Repositories

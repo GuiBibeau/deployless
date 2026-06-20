@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployless Production Path"
+  short_description: "Automate production from main"
+  default_prompt: "Use $deployless-production-path to design a continuous production path from main."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployless Audit"
+  short_description: "Audit a repo for deployless readiness"
+  default_prompt: "Use $deployless-audit to audit this repository for deployless delivery readiness."

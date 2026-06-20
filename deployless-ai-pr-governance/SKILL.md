@@ -1,6 +1,34 @@
 ---
-name: deployless-ai-pr-governance-any-language
-description: Manage high-volume AI-generated pull requests and multi-agent coding work in deployless repositories. Use when a repo has many bot or agent PRs, parallel agent work, noisy low-context PRs, merge-queue pressure, CI exhaustion, duplicate fixes, ownership confusion, or review bottlenecks that threaten a single-mainline delivery model.
+name: deployless-ai-pr-governance
+description: AI PR intake and multi-agent governance for deployless repositories. Use when a repo has high-volume bot or agent PRs, parallel agent work, noisy low-context PRs, merge-queue pressure, CI exhaustion, duplicate fixes, ownership confusion, or review bottlenecks that threaten a single-mainline delivery model.
+metadata:
+  priority: 7
+  pathPatterns:
+    - ".github/pull_request_template.md"
+    - ".github/workflows/**"
+    - "CODEOWNERS"
+    - "CONTRIBUTING.md"
+    - "docs/**"
+    - "AGENTS.md"
+  promptSignals:
+    phrases:
+      - "ai pr"
+      - "ai pull requests"
+      - "agent pr"
+      - "multi-agent"
+      - "merge queue pressure"
+      - "review bottleneck"
+    allOf:
+      - [agent, pull]
+      - [ai, review]
+    anyOf:
+      - "low-context PR"
+      - "CI exhaustion"
+      - "duplicate fixes"
+      - "ready for agent"
+      - "agent workflow"
+    noneOf: []
+    minScore: 5
 ---
 
 # AI PR Intake and Multi-Agent Governance
@@ -22,11 +50,11 @@ The target model is:
 
 Run these first when possible:
 
-1. `01-delivery-model-audit`
-2. `02-single-mainline-governance`
-3. `03-runtime-release-controls`
-4. `04-continuous-production-path`
-5. `05-operational-safety-traces-migrations`
+1. `deployless-audit`
+2. `deployless-mainline`
+3. `deployless-release-controls`
+4. `deployless-production-path`
+5. `deployless-operational-safety`
 
 If the repo is already drowning in AI PRs, apply this skill immediately as an intake stopgap, then backfill the earlier deployless plan.
 

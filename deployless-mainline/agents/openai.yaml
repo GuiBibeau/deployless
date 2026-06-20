@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployless Mainline"
+  short_description: "Set single-mainline governance"
+  default_prompt: "Use $deployless-mainline to define single-mainline governance for this repository."

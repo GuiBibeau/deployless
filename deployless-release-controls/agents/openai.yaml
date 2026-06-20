@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployless Release Controls"
+  short_description: "Design runtime release controls"
+  default_prompt: "Use $deployless-release-controls to design runtime release controls for this repository."

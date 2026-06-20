@@ -20,14 +20,22 @@ The result is a delivery model where:
 
 | Skill | Purpose |
 | --- | --- |
-| `01-delivery-model-audit` | Inspect a repo and create a deployless migration plan. |
-| `02-single-mainline-governance` | Move toward one long-lived mainline with merge gates. |
-| `03-runtime-release-controls` | Add feature flags, kill switches, routing controls, or similar runtime gates. |
-| `04-continuous-production-path` | Connect successful `main` commits to deployment, publication, or artifact promotion. |
-| `05-operational-safety-traces-migrations` | Add tracing, replay tests, rollback docs, and safe migration rules. |
-| `06-ai-pr-governance` | Manage large AI PR inflows, queue pressure, and multi-agent work. |
+| `deployless-audit` | Inspect a repo and create a deployless migration plan. |
+| `deployless-mainline` | Move toward one long-lived mainline with merge gates. |
+| `deployless-release-controls` | Add feature flags, kill switches, routing controls, or similar runtime gates. |
+| `deployless-production-path` | Connect successful `main` commits to deployment, publication, or artifact promotion. |
+| `deployless-operational-safety` | Add trace/replay testing, observability, rollback docs, and safe migration rules. |
+| `deployless-ai-pr-governance` | Manage large AI PR inflows, queue pressure, and multi-agent work. |
 
 The skills are language-agnostic. They can be applied to services, frontends, CLIs, libraries, mobile apps, infrastructure repos, serverless functions, and monorepos.
+
+Each skill follows the standard Codex skill layout:
+
+```text
+skill-name/
+  SKILL.md
+  agents/openai.yaml
+```
 
 ## Install
 
@@ -39,12 +47,12 @@ cd deployless
 
 DEST="${CODEX_HOME:-$HOME/.codex}/skills"
 mkdir -p "$DEST"
-cp -R 01-delivery-model-audit "$DEST/"
-cp -R 02-single-mainline-governance "$DEST/"
-cp -R 03-runtime-release-controls "$DEST/"
-cp -R 04-continuous-production-path "$DEST/"
-cp -R 05-operational-safety-traces-migrations "$DEST/"
-cp -R 06-ai-pr-governance "$DEST/"
+cp -R deployless-audit "$DEST/"
+cp -R deployless-mainline "$DEST/"
+cp -R deployless-release-controls "$DEST/"
+cp -R deployless-production-path "$DEST/"
+cp -R deployless-operational-safety "$DEST/"
+cp -R deployless-ai-pr-governance "$DEST/"
 ```
 
 Restart Codex or start a new session so the skills are discovered.
@@ -54,17 +62,17 @@ Restart Codex or start a new session so the skills are discovered.
 Run the skills in order. Start with the audit:
 
 ```text
-Use deployless-delivery-model-audit-any-language on this repository.
+Use $deployless-audit on this repository.
 ```
 
 Then continue through the sequence:
 
 ```text
-Use deployless-single-mainline-governance-any-language.
-Use deployless-runtime-release-controls-any-language.
-Use deployless-continuous-production-path-any-language.
-Use deployless-operational-safety-traces-migrations-any-language.
-Use deployless-ai-pr-governance-any-language.
+Use $deployless-mainline.
+Use $deployless-release-controls.
+Use $deployless-production-path.
+Use $deployless-operational-safety.
+Use $deployless-ai-pr-governance.
 ```
 
 The audit should create or update `docs/deployless-mainline-plan.md`. Later skills append implementation details and safety guidance to that plan.

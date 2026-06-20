@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployless Operational Safety"
+  short_description: "Add traces, rollback, and migration safety"
+  default_prompt: "Use $deployless-operational-safety to add operational safeguards for deployless delivery."

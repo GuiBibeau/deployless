@@ -1,6 +1,35 @@
 ---
-name: deployless-single-mainline-governance-any-language
-description: Use this skill after the delivery audit when the repository needs trunk-based governance, branch protection, contribution rules, review rules, merge gates, and mainline-friendly development practices independent of programming language.
+name: deployless-mainline
+description: Single-mainline governance for deployless repositories. Use after a deployless audit when a repo needs trunk-based branch rules, branch protection, contribution guidance, review gates, merge queue policy, AI PR intake rules, or agent-ready mainline practices.
+metadata:
+  priority: 6
+  docs:
+    - "https://trunkbaseddevelopment.com/"
+    - "https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development"
+  pathPatterns:
+    - "CONTRIBUTING.md"
+    - "CODEOWNERS"
+    - ".github/pull_request_template.md"
+    - ".github/workflows/**"
+    - "docs/**"
+  promptSignals:
+    phrases:
+      - "mainline"
+      - "trunk based"
+      - "branch protection"
+      - "merge queue"
+      - "long-lived branches"
+      - "ai pull requests"
+    allOf:
+      - [main, branch]
+      - [pull, request]
+    anyOf:
+      - "develop branch"
+      - "release branch"
+      - "CODEOWNERS"
+      - "review gates"
+    noneOf: []
+    minScore: 5
 ---
 
 # Single Mainline Governance for Any-Language Repositories
@@ -21,7 +50,7 @@ The intended result is not â€œeveryone commits anything directly to production.â
 
 ## Preconditions
 
-Run `01-delivery-model-audit` first. Do not apply this skill blindly. The audit should identify:
+Run `deployless-audit` first. Do not apply this skill blindly. The audit should identify:
 
 - default branch name
 - existing long-lived branches

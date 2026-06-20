@@ -1,6 +1,33 @@
 ---
-name: deployless-runtime-release-controls-any-language
-description: Use this skill when a repo needs feature flags, kill switches, capability gates, targeted rollout, or release-control abstraction independent of programming language and provider.
+name: deployless-release-controls
+description: Runtime release controls for deployless repositories. Use when a repo needs feature flags, kill switches, capability gates, targeted rollout, remote config, routing rules, or a provider-neutral release-control facade independent of language and provider.
+metadata:
+  priority: 6
+  pathPatterns:
+    - "src/**"
+    - "app/**"
+    - "lib/**"
+    - "config/**"
+    - "docs/**"
+  promptSignals:
+    phrases:
+      - "feature flag"
+      - "kill switch"
+      - "release control"
+      - "runtime flag"
+      - "remote config"
+      - "targeted rollout"
+    allOf:
+      - [deployment, release]
+      - [flag, rollout]
+    anyOf:
+      - "LaunchDarkly"
+      - "Unleash"
+      - "Statsig"
+      - "ConfigCat"
+      - "capability gate"
+    noneOf: []
+    minScore: 5
 ---
 
 # Runtime Release Controls for Any-Language Repositories

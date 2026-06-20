@@ -1,6 +1,38 @@
 ---
-name: deployless-continuous-production-path-any-language
-description: Use this skill after mainline governance and release controls exist, when the repository needs CI/CD changes that automatically deploy, publish, or promote artifacts from main across any language, runtime, or hosting platform.
+name: deployless-production-path
+description: Continuous production path for deployless repositories. Use after mainline governance and release controls exist, when a repo needs CI/CD changes to automatically deploy, publish, or promote artifacts from main across any language, runtime, or hosting platform.
+metadata:
+  priority: 6
+  pathPatterns:
+    - ".github/workflows/**"
+    - ".gitlab-ci.yml"
+    - "Jenkinsfile"
+    - "vercel.json"
+    - "netlify.toml"
+    - "fly.toml"
+    - "Dockerfile"
+    - "docs/**"
+  bashPatterns:
+    - "\\bvercel\\s+(deploy|build)\\b"
+    - "\\bfly\\s+deploy\\b"
+    - "\\bdocker\\s+build\\b"
+  promptSignals:
+    phrases:
+      - "deploy from main"
+      - "continuous production"
+      - "automatic deployment"
+      - "deployment pipeline"
+      - "publish from main"
+    allOf:
+      - [main, deploy]
+      - [ci, cd]
+    anyOf:
+      - "smoke checks"
+      - "artifact promotion"
+      - "merge queue"
+      - "production deploy"
+    noneOf: []
+    minScore: 5
 ---
 
 # Continuous Production Path for Any-Language Repositories
@@ -21,9 +53,9 @@ Deployment moves code. Release exposes behavior.
 
 Run these skills first:
 
-1. `01-delivery-model-audit`
-2. `02-single-mainline-governance`
-3. `03-runtime-release-controls`
+1. `deployless-audit`
+2. `deployless-mainline`
+3. `deployless-release-controls`
 
 Do not enable automatic production deployment when:
 

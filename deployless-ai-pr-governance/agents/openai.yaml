@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployless AI PR Governance"
+  short_description: "Govern AI PR and multi-agent flow"
+  default_prompt: "Use $deployless-ai-pr-governance to set up AI PR intake and multi-agent workflow governance."

@@ -1,6 +1,34 @@
 ---
-name: deployless-operational-safety-traces-migrations-any-language
-description: Use this skill after mainline deployment and runtime release controls are designed, when the repository needs operational safeguards that make continuous production deployment safe across languages and runtimes.
+name: deployless-operational-safety
+description: Operational safety for deployless repositories. Use after mainline deployment and runtime release controls are designed, when a repo needs traces, replay tests, observability, rollback drills, smoke checks, compatibility windows, or expand-contract migration safety.
+metadata:
+  priority: 6
+  pathPatterns:
+    - "docs/**"
+    - "test/**"
+    - "tests/**"
+    - "spec/**"
+    - "migrations/**"
+    - "db/**"
+    - ".github/workflows/**"
+  promptSignals:
+    phrases:
+      - "operational safety"
+      - "replay tests"
+      - "expand contract"
+      - "rollback"
+      - "production traces"
+      - "migration safety"
+    allOf:
+      - [rollback, deploy]
+      - [migration, safety]
+    anyOf:
+      - "observability"
+      - "smoke checks"
+      - "trace id"
+      - "compatibility window"
+    noneOf: []
+    minScore: 5
 ---
 
 # Operational Safety, Traces, Replay, and Migrations for Any-Language Repositories
@@ -24,10 +52,10 @@ The skill focuses on:
 
 Run these first:
 
-1. `01-delivery-model-audit`
-2. `02-single-mainline-governance`
-3. `03-runtime-release-controls`
-4. `04-continuous-production-path`
+1. `deployless-audit`
+2. `deployless-mainline`
+3. `deployless-release-controls`
+4. `deployless-production-path`
 
 If the repo does not yet have runtime release controls or mainline deployment docs, add those before claiming deployless-style safety.
 
