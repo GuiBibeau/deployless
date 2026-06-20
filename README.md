@@ -28,9 +28,12 @@ The skills are language-agnostic. They can be applied to services, frontends, CL
 
 ## Install
 
-Clone or download this repository, then copy the skill directories into your Codex skills directory:
+Clone this repository, then copy the skill directories into your Codex skills directory:
 
 ```sh
+git clone https://github.com/GuiBibeau/deployless.git
+cd deployless
+
 DEST="${CODEX_HOME:-$HOME/.codex}/skills"
 mkdir -p "$DEST"
 cp -R 01-delivery-model-audit "$DEST/"
