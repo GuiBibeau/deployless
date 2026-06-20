@@ -13,6 +13,7 @@ The result is a delivery model where:
 - Release is controlled at runtime, not by long-lived branches.
 - Risky data changes use expand-contract migrations.
 - AI-generated PRs are scoped, owned, queued, and reviewed before they can pressure the mainline.
+- Agent work moves through scope challenge, planning artifacts, test-first implementation, and independent review.
 - Production behavior is observable, reversible, and covered by replay tests where practical.
 
 ## What's included
@@ -76,6 +77,7 @@ The audit should create or update `docs/deployless-mainline-plan.md`. Later skil
 4. Automate deployment or publication from successful `main` commits.
 5. Add rollback, tracing, replay tests, and migration safety.
 6. Add AI PR intake and multi-agent work rules before PR volume overwhelms review.
+7. Use a coordinator-led agent workflow: challenge unclear scope, publish ready slices, design alternatives for important interfaces, build with vertical test-first loops, and review standards plus spec before merge.
 
 Do not enable automatic production deployment until the audit shows that tests, release controls, rollback, and migration safety are adequate.
 
@@ -88,6 +90,7 @@ Do not enable automatic production deployment until the audit shows that tests, 
 - Do not perform destructive migrations without an expand-contract plan.
 - Do not auto-merge AI PRs just because CI is green.
 - Do not let multiple agents edit the same risky area without an owner.
+- Do not let agents implement unclear work before scope, acceptance criteria, and test seams are resolved.
 - Do not claim deployless delivery is complete while known safety blockers remain.
 
 ## References

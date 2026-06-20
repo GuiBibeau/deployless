@@ -32,6 +32,7 @@ Run `01-delivery-model-audit` first. Do not apply this skill blindly. The audit 
 - code review rules
 - compliance or approval requirements
 - AI or bot PR sources, agent handoff conventions, and current PR queue pressure
+- issue readiness, planning artifact, test seam, and final review conventions for agent-authored work
 
 ## Branch model target
 
@@ -72,6 +73,7 @@ These names may still exist temporarily during migration, but they should not re
 - package publishing or artifact release config
 - monorepo ownership files
 - issue labels, project boards, merge queue configuration, stale PR automation, and bot account rules
+- planning docs, ADRs, domain glossary, implementation handoff docs, and final review reports
 
 ## Implementation procedure
 
@@ -113,8 +115,10 @@ Add a checklist to the PR template or contribution docs:
 - [ ] The change is small enough to review safely.
 - [ ] The change is deployable when merged to main.
 - [ ] AI-generated work has clear intent, scope, owner, and linked issue or decision.
+- [ ] Scope, acceptance criteria, and test seams are resolved enough for an agent to work independently.
 - [ ] Incomplete or risky behavior is behind a runtime release control.
 - [ ] Required tests were added or updated.
+- [ ] Final review checked both repository standards and the originating spec or issue.
 - [ ] Observability was added for new production behavior.
 - [ ] Data migrations are backward-compatible, if any.
 - [ ] Rollback or kill-switch behavior is documented.
@@ -230,6 +234,21 @@ bot/<provider>/<ticket-or-area>-<short-slug>
 
 Do not create a long-lived AI staging branch. AI work should be split, reviewed, and merged through the same single mainline.
 
+## Agent execution loop
+
+Use this loop for agent-authored deployless work:
+
+1. Orient on repository instructions, domain glossary, relevant ADRs, and the source issue or plan.
+2. Challenge unclear scope before implementation. Ask one blocking question at a time only when the answer cannot be inferred safely.
+3. Convert ready work into vertical slices that are independently buildable, reviewable, and testable.
+4. For important interface or module boundaries, generate multiple distinct design options before choosing one.
+5. Build non-trivial changes with a vertical test-first loop: one behavior, failing test, minimal implementation, refactor after green.
+6. Run local checks regularly, with focused checks during the work and broader checks before final review.
+7. Review the final diff on two axes: repository standards and fidelity to the originating spec, issue, or plan.
+8. Classify review findings as accepted, rejected, deferred, or requiring a human decision before merge.
+
+The primary coordinator remains accountable for merge readiness. Independent agents can critique, design, implement, or review, but they do not decide to merge by themselves.
+
 ## Migration plan from long-lived branches
 
 When a repo currently depends on long-lived branches, use a staged migration:
@@ -280,6 +299,7 @@ Create or update:
 - `docs/mainline-branch-protection.md`
 - `docs/deployless-mainline-plan.md`, appending a “Mainline governance” section
 - AI PR intake labels, queue rules, and agent branch naming docs when relevant
+- agent execution-loop guidance in contribution or workflow docs
 - CI config triggers and required checks, when safe to edit
 
 ## Acceptance criteria
@@ -292,6 +312,7 @@ This skill is complete when:
 - CI runs required checks for changes targeting `main`
 - branch protection expectations are documented or configured
 - AI-generated PRs have the same deployability and ownership requirements as human PRs
+- agent-authored work has documented scope challenge, test-first implementation expectations, and final review gates
 - deployment/release docs no longer teach branch promotion as the target model
 
 ## Anti-goals
@@ -302,3 +323,4 @@ This skill is complete when:
 - Do not replace runtime release controls with branch discipline alone.
 - Do not auto-merge AI-generated PRs just because CI passes.
 - Do not let agent volume create a hidden second integration process.
+- Do not let critique, design, implementation, and review agents make unowned merge decisions.

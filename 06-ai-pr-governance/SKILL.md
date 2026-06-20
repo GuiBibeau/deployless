@@ -16,6 +16,7 @@ The target model is:
 - multiple agents do not fight over the same files, migrations, flags, or release paths
 - CI capacity is protected from speculative or duplicate work
 - humans review decisions and risk, not piles of unexplained diffs
+- the primary coordinator turns critique, design, implementation, and review outputs into explicit merge decisions
 
 ## Preconditions
 
@@ -39,6 +40,7 @@ If the repo is already drowning in AI PRs, apply this skill immediately as an in
 - CI cost, queue time, cancellation behavior, and flaky checks
 - Repeatedly touched files, merge-conflict hotspots, migrations, and generated files
 - Existing agent instructions, task trackers, handoff docs, and branch naming conventions
+- Planning artifacts, domain glossary, ADRs, acceptance criteria, test seams, review reports, and issue readiness labels
 
 ## Intake states
 
@@ -104,6 +106,7 @@ For vague PRs, ask the agent to rewrite the PR body and split the diff before re
 Use these rules when several agents work in the same repository:
 
 - One owner per task, PR, or issue.
+- One primary coordinator owns scope, sequencing, review classification, and merge readiness.
 - One active agent per risky file area unless an explicit coordinator owns the integration.
 - Agents claim scope in the issue, task, or coordination doc before editing.
 - Agents use short-lived branches and delete them after merge or rejection.
@@ -118,6 +121,80 @@ agent/<tool-or-agent>/<ticket-or-area>-<short-slug>
 bot/<provider>/<ticket-or-area>-<short-slug>
 human/<name>/<ticket-or-area>-<short-slug>
 ```
+
+## Coordinator-led execution loop
+
+Use this loop for non-trivial AI-authored work.
+
+### 0. Orient
+
+Read repository instructions, contribution docs, domain glossary, relevant ADRs, and the source issue, plan, or PRD. If issue-tracker or label docs exist, follow them.
+
+### 1. Shape
+
+Challenge the scope before coding:
+
+- resolve unclear terms into the repo's domain language
+- identify hidden dependencies and hard-to-reverse decisions
+- ask one blocking question at a time when human judgment is required
+- create an ADR only for real trade-offs that will surprise future maintainers
+- keep the PR in draft or `ai/needs-intent` until scope is coherent
+
+### 2. Publish ready slices
+
+Break broad work into vertical tracer-bullet slices:
+
+- each slice should be independently buildable and reviewable
+- each slice should have acceptance criteria and a test seam
+- dependency order should be explicit
+- only slices with enough context for unattended agent work should be marked ready
+
+### 3. Design important interfaces twice
+
+For meaningful module, API, flag, migration, or agent-workflow boundaries, ask independent design agents for multiple distinct designs. Compare them on:
+
+- caller simplicity
+- ease of correct use
+- hidden implementation complexity
+- compatibility with existing patterns
+- testability through public behavior
+
+Choose deliberately and record the decision when it affects future work.
+
+### 4. Build with vertical test-first loops
+
+For non-trivial implementation:
+
+- write one behavior test through the highest useful public seam
+- make it fail for the right reason
+- write the minimum code to pass
+- repeat for the next behavior
+- refactor only after the current slice is green
+- run focused checks regularly and broader checks before final review
+
+Avoid writing all tests first or all implementation first. That usually creates brittle tests and speculative code.
+
+### 5. Review with independent agents
+
+Before merge readiness, run independent review on two axes:
+
+- Standards: whether the diff follows the repo's documented conventions.
+- Spec: whether the diff satisfies the source issue, PRD, or plan without scope creep.
+
+Keep those reports separate so one does not mask the other.
+
+### 6. Classify findings
+
+The primary coordinator classifies every critique or review finding:
+
+```text
+accepted
+rejected
+deferred
+needs-human-decision
+```
+
+Accepted findings become code, docs, labels, tests, or follow-up issues. Rejected findings get a brief reason. Deferred findings get an owner or explicit risk note. Human-decision findings block merge readiness.
 
 ## PR size and shape
 
@@ -173,8 +250,11 @@ Before an AI PR enters merge queue, require:
 - clear intent and linked issue or decision
 - one accountable owner
 - small enough diff or documented exception
+- completed scope challenge for unclear or broad work
+- acceptance criteria and test seam for agent-ready work
 - passing required checks
 - tests for changed behavior or a documented test gap
+- final standards/spec review findings classified by the coordinator
 - no unowned migration, auth, billing, secret, deployment, or security change
 - release control for unfinished or risky behavior
 - rollback or follow-up plan when production behavior changes
@@ -188,6 +268,7 @@ Create or update:
 ```text
 docs/ai-pr-intake.md
 docs/multi-agent-work.md
+docs/agent-execution-loop.md
 docs/deployless-mainline-plan.md
 ```
 
@@ -229,6 +310,26 @@ Use existing contribution or operations docs if the repo already has them.
 ## High-risk paths
 ```
 
+### `docs/agent-execution-loop.md`
+
+```markdown
+# Agent execution loop
+
+## Orient
+
+## Scope challenge
+
+## Ready slices
+
+## Interface design alternatives
+
+## Test-first implementation
+
+## Final review axes
+
+## Finding classification
+```
+
 ## Output
 
 Create or update:
@@ -240,6 +341,7 @@ Create or update:
 - CI concurrency and path-filtering settings where safe
 - `docs/ai-pr-intake.md`
 - `docs/multi-agent-work.md`
+- `docs/agent-execution-loop.md`
 - `docs/deployless-mainline-plan.md`, appending AI PR governance status
 
 ## Acceptance criteria
@@ -249,6 +351,7 @@ This skill is complete when:
 - AI-generated PRs have a documented intake path
 - low-context PRs are kept out of review-ready and merge-queue states
 - multi-agent branch and handoff rules are documented
+- non-trivial agent work has a documented orient, shape, slice, design, test-first, and review loop
 - ownership exists for high-risk paths
 - CI has a plan for flood control or the blocker is documented
 - stale, duplicate, speculative, and unreviewable AI PRs can be parked or closed quickly
@@ -261,3 +364,4 @@ This skill is complete when:
 - Do not let agents bypass CODEOWNERS, security review, or compliance gates.
 - Do not use labels as a substitute for reading risky diffs.
 - Do not preserve stale AI PRs merely because an agent spent time generating them.
+- Do not delegate merge judgment to a critique, design, implementation, or review agent.

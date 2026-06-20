@@ -56,6 +56,7 @@ Look for:
 - Data and migrations: SQL migrations, ORM migrations, NoSQL schema conventions, event schemas, message queues, cache keys, search indexes
 - Existing feature flags: LaunchDarkly, Unleash, Statsig, ConfigCat, Flagsmith, Split, Flipt, homemade flags, environment-config toggles, routing tables, capability checks
 - AI and automation workflow: bot authors, agent branches, open AI PR volume, merge queue, PR labels, PR templates, issue links, CODEOWNERS, stale PR automation, CI concurrency, and multi-agent handoff docs
+- Agent execution workflow: planning docs, domain glossary, ADRs, issue readiness labels, implementation handoff notes, test-first conventions, review rules, and final-diff review expectations
 
 ## Concept mapping
 
@@ -72,6 +73,7 @@ Use this mapping in generated docs.
 | Production traces drive development | Correlated request logs, traces, replay fixtures, sampled production scenarios, regression tests |
 | Rollback is mostly behavioral | Turn flags off, kill routes, disable capabilities, or roll back deployment only for infrastructure/runtime failures |
 | AI can generate more PRs than humans can review | AI PR intake labels, WIP limits, ownership, merge queues, CODEOWNERS, and low-context PR rejection rules |
+| Agents need bounded autonomy | Scope challenge, planning artifacts, vertical slices, test-first implementation, independent design/review passes, and primary-agent merge judgment |
 
 ## Audit procedure
 
@@ -123,7 +125,14 @@ Use this mapping in generated docs.
    - unowned high-risk diffs
    - CI queue starvation
    - missing agent handoff rules
-9. Document the minimum changes required before `main` can safely deploy to production.
+9. Detect agent execution maturity:
+   - unclear issue or PRD intake
+   - missing acceptance criteria
+   - no documented test seams
+   - no review of important interface designs
+   - no final standards/spec review
+   - no owner converting review findings into decisions
+10. Document the minimum changes required before `main` can safely deploy to production.
 
 ## Output
 
@@ -156,6 +165,8 @@ Create or update `docs/deployless-mainline-plan.md` with this structure:
 
 ## AI PR and multi-agent governance
 
+## Agent execution and review loop
+
 ## Implementation sequence
 
 ## Risks and blockers
@@ -176,6 +187,7 @@ Also create an ADR when the repo already has an ADR convention. Use the existing
 - For mobile apps, map “deployment” to build/signing/submission pipelines. Runtime release controls may be remote config, capability gates, or backend-side flags.
 - For infrastructure repos, map “release controls” to progressive rollout, policy gates, plan/apply separation, and reversible changes.
 - For high-volume AI PR repositories, map “review capacity” to an explicit intake queue with WIP limits, owner assignment, labels, CODEOWNERS, and CI budget controls.
+- For multi-agent work, map “implementation readiness” to resolved scope, explicit acceptance criteria, test seams, design options for important interfaces, and final review ownership.
 
 ## Safety decision rules
 
@@ -186,6 +198,7 @@ Also create an ADR when the repo already has an ADR convention. Use the existing
 - If secrets or production credentials appear in the repo, stop and document a remediation task before touching deployment automation.
 - If deployment scripts are not idempotent, require idempotency before auto-deploying from `main`.
 - If AI PR volume is higher than review capacity, require intake labels, queue limits, and low-context PR rejection before enabling broad automation.
+- If agent work lacks a clear owner, acceptance criteria, or test seam, keep it out of review-ready and merge-queue states.
 
 ## Acceptance criteria
 
@@ -200,6 +213,7 @@ The audit is complete when:
 - rollback and kill-switch behavior is defined
 - migration and observability gaps are listed
 - AI PR intake and multi-agent coordination risks are listed when relevant
+- agent planning, implementation, and final review gates are listed when relevant
 - the next skill to run is unambiguous
 
 ## Anti-goals
