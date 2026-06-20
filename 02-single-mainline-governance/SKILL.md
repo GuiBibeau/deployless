@@ -1,6 +1,5 @@
 ---
 name: deployless-single-mainline-governance-any-language
-summary: Convert any-language repositories toward one long-lived main branch with CI-gated merges and no long-lived feature, develop, or release branches.
 description: Use this skill after the delivery audit when the repository needs trunk-based governance, branch protection, contribution rules, review rules, merge gates, and mainline-friendly development practices independent of programming language.
 ---
 
@@ -18,6 +17,7 @@ The intended result is not “everyone commits anything directly to production.�
 - required checks before merge
 - no long-lived `develop`, `staging`, `qa`, or `release/*` branches as integration backlogs
 - unfinished behavior hidden behind release controls
+- AI-generated PRs entering the same queue as human PRs, with clear ownership and review gates
 
 ## Preconditions
 
@@ -31,6 +31,7 @@ Run `01-delivery-model-audit` first. Do not apply this skill blindly. The audit 
 - deployment dependencies on branch names
 - code review rules
 - compliance or approval requirements
+- AI or bot PR sources, agent handoff conventions, and current PR queue pressure
 
 ## Branch model target
 
@@ -70,6 +71,7 @@ These names may still exist temporarily during migration, but they should not re
 - docs mentioning `develop`, `staging`, `qa`, `release/*`, or manual branch promotion
 - package publishing or artifact release config
 - monorepo ownership files
+- issue labels, project boards, merge queue configuration, stale PR automation, and bot account rules
 
 ## Implementation procedure
 
@@ -110,6 +112,7 @@ Add a checklist to the PR template or contribution docs:
 
 - [ ] The change is small enough to review safely.
 - [ ] The change is deployable when merged to main.
+- [ ] AI-generated work has clear intent, scope, owner, and linked issue or decision.
 - [ ] Incomplete or risky behavior is behind a runtime release control.
 - [ ] Required tests were added or updated.
 - [ ] Observability was added for new production behavior.
@@ -191,6 +194,42 @@ Examples:
 - CODEOWNERS required for sensitive paths
 - audit log entry for flag changes
 
+## AI PR and multi-agent governance
+
+When AI agents generate PRs, keep them inside the same mainline discipline:
+
+- require draft PRs until intent, scope, tests, and risk are documented
+- require a linked issue, task, incident, or decision for every agent PR
+- label AI PRs separately from human PRs without giving them weaker gates
+- cap active AI PRs per owner area so review and CI do not starve
+- require one accountable owner for every AI PR
+- reject or park low-context PRs that only claim generic cleanup or improvement
+- prevent multiple agents from editing the same risky area without an explicit coordinator
+- use merge queues for review-ready PRs instead of long-lived integration branches
+
+Suggested labels:
+
+```text
+ai/generated
+ai/needs-intent
+ai/needs-owner
+ai/needs-scope
+ai/needs-tests
+ai/conflict-risk
+ai/ready-for-human-review
+ai/parked
+ai/rejected
+```
+
+Recommended agent branch names:
+
+```text
+agent/<tool-or-agent>/<ticket-or-area>-<short-slug>
+bot/<provider>/<ticket-or-area>-<short-slug>
+```
+
+Do not create a long-lived AI staging branch. AI work should be split, reviewed, and merged through the same single mainline.
+
 ## Migration plan from long-lived branches
 
 When a repo currently depends on long-lived branches, use a staged migration:
@@ -240,6 +279,7 @@ Create or update:
 - PR/MR template, if present or appropriate
 - `docs/mainline-branch-protection.md`
 - `docs/deployless-mainline-plan.md`, appending a “Mainline governance” section
+- AI PR intake labels, queue rules, and agent branch naming docs when relevant
 - CI config triggers and required checks, when safe to edit
 
 ## Acceptance criteria
@@ -251,6 +291,7 @@ This skill is complete when:
 - PR/merge readiness criteria mention deployability and release controls
 - CI runs required checks for changes targeting `main`
 - branch protection expectations are documented or configured
+- AI-generated PRs have the same deployability and ownership requirements as human PRs
 - deployment/release docs no longer teach branch promotion as the target model
 
 ## Anti-goals
@@ -259,3 +300,5 @@ This skill is complete when:
 - Do not delete active branches without explicit instruction and a migration plan.
 - Do not force direct commits to `main` if PRs are the established review mechanism.
 - Do not replace runtime release controls with branch discipline alone.
+- Do not auto-merge AI-generated PRs just because CI passes.
+- Do not let agent volume create a hidden second integration process.

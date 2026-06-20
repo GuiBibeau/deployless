@@ -1,6 +1,5 @@
 ---
 name: deployless-delivery-model-audit-any-language
-summary: Audit any-language repositories and design a deployless, single-mainline delivery model before implementation.
 description: Use this skill first when adapting a repository in any language toward deployless-style deployment, single-main-branch development, runtime release controls, automatic deployment from main, or production-trace-driven iteration.
 ---
 
@@ -56,6 +55,7 @@ Look for:
 - Observability: OpenTelemetry, Sentry, Datadog, Honeycomb, Grafana, Prometheus, CloudWatch, New Relic, logging libraries, audit logs
 - Data and migrations: SQL migrations, ORM migrations, NoSQL schema conventions, event schemas, message queues, cache keys, search indexes
 - Existing feature flags: LaunchDarkly, Unleash, Statsig, ConfigCat, Flagsmith, Split, Flipt, homemade flags, environment-config toggles, routing tables, capability checks
+- AI and automation workflow: bot authors, agent branches, open AI PR volume, merge queue, PR labels, PR templates, issue links, CODEOWNERS, stale PR automation, CI concurrency, and multi-agent handoff docs
 
 ## Concept mapping
 
@@ -71,6 +71,7 @@ Use this mapping in generated docs.
 | Database versioning | Expand-contract migrations, dual-read/write, non-destructive deploy steps, migration verification |
 | Production traces drive development | Correlated request logs, traces, replay fixtures, sampled production scenarios, regression tests |
 | Rollback is mostly behavioral | Turn flags off, kill routes, disable capabilities, or roll back deployment only for infrastructure/runtime failures |
+| AI can generate more PRs than humans can review | AI PR intake labels, WIP limits, ownership, merge queues, CODEOWNERS, and low-context PR rejection rules |
 
 ## Audit procedure
 
@@ -115,7 +116,14 @@ Use this mapping in generated docs.
    - canary or phased rollout
    - production monitoring
 7. Detect mutable state and migration risk.
-8. Document the minimum changes required before `main` can safely deploy to production.
+8. Detect AI PR and multi-agent pressure:
+   - many bot-authored PRs
+   - duplicate or low-context PRs
+   - repeated merge conflicts
+   - unowned high-risk diffs
+   - CI queue starvation
+   - missing agent handoff rules
+9. Document the minimum changes required before `main` can safely deploy to production.
 
 ## Output
 
@@ -146,6 +154,8 @@ Create or update `docs/deployless-mainline-plan.md` with this structure:
 
 ## Rollback and kill-switch strategy
 
+## AI PR and multi-agent governance
+
 ## Implementation sequence
 
 ## Risks and blockers
@@ -165,6 +175,7 @@ Also create an ADR when the repo already has an ADR convention. Use the existing
 - For libraries, map “deployment” to package publication or artifact release. Still use `main` as the source of releasable truth.
 - For mobile apps, map “deployment” to build/signing/submission pipelines. Runtime release controls may be remote config, capability gates, or backend-side flags.
 - For infrastructure repos, map “release controls” to progressive rollout, policy gates, plan/apply separation, and reversible changes.
+- For high-volume AI PR repositories, map “review capacity” to an explicit intake queue with WIP limits, owner assignment, labels, CODEOWNERS, and CI budget controls.
 
 ## Safety decision rules
 
@@ -174,6 +185,7 @@ Also create an ADR when the repo already has an ADR convention. Use the existing
 - If runtime release controls are impossible, document the limitation and prefer staged deployment plus fast rollback.
 - If secrets or production credentials appear in the repo, stop and document a remediation task before touching deployment automation.
 - If deployment scripts are not idempotent, require idempotency before auto-deploying from `main`.
+- If AI PR volume is higher than review capacity, require intake labels, queue limits, and low-context PR rejection before enabling broad automation.
 
 ## Acceptance criteria
 
@@ -187,6 +199,7 @@ The audit is complete when:
 - the deployment automation path is described
 - rollback and kill-switch behavior is defined
 - migration and observability gaps are listed
+- AI PR intake and multi-agent coordination risks are listed when relevant
 - the next skill to run is unambiguous
 
 ## Anti-goals

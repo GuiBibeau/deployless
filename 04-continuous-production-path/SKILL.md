@@ -1,6 +1,5 @@
 ---
 name: deployless-continuous-production-path-any-language
-summary: Connect successful main commits to production deployment or publication for any language while preserving runtime release control.
 description: Use this skill after mainline governance and release controls exist, when the repository needs CI/CD changes that automatically deploy, publish, or promote artifacts from main across any language, runtime, or hosting platform.
 ---
 
@@ -35,6 +34,7 @@ Do not enable automatic production deployment when:
 - rollback path is unknown
 - production observability is absent
 - compliance requires an approval that has not been modeled
+- AI PR intake is unbounded and can flood CI or merge queues faster than review can happen
 
 ## Deployment target classification
 
@@ -65,6 +65,7 @@ Choose the correct target type before editing CI/CD.
 - Deployment approvals
 - Release tagging/changelog process
 - Observability and incident process
+- AI PR volume, bot authors, merge queue settings, CI concurrency limits, and expensive check triggers
 
 ## Pipeline architecture
 
@@ -131,6 +132,18 @@ platform auto-deploy tied to main
 ```
 
 Avoid environment branches as the target model.
+
+### PR flood control
+
+For repositories with heavy AI-generated PR volume:
+
+- run cheap checks before expensive checks
+- cancel superseded CI runs on the same PR branch
+- require review-ready labels before expensive end-to-end, load, mobile, or full integration jobs
+- keep merge queue limited to PRs with clear owner, scope, tests, and rollback notes
+- prioritize incident, security, and human-unblocking fixes over speculative AI refactors
+- use path-aware CI for monorepos and ownership areas
+- document CI budget limits when automation can generate many branches
 
 ### Secrets
 
@@ -271,6 +284,7 @@ Create or update:
 - deployment docs
 - smoke test scripts or commands
 - deployment marker/version endpoint if suitable
+- CI concurrency, cancellation, or path-filtering settings for AI PR flood control when relevant
 - `docs/continuous-production-path.md`
 - `docs/deployless-mainline-plan.md`, appending pipeline details
 
@@ -284,6 +298,7 @@ This skill is complete when:
 - release exposure remains controlled at runtime when possible
 - post-deploy smoke checks exist or are explicitly documented as a blocker
 - rollback procedure is documented
+- AI-generated PR volume cannot starve required deploy checks or merge queue capacity
 - environment branches are not required by the target model
 
 ## Anti-goals

@@ -1,6 +1,5 @@
 ---
 name: deployless-runtime-release-controls-any-language
-summary: Add provider-neutral runtime release controls for any language so deployment can be separated from release.
 description: Use this skill when a repo needs feature flags, kill switches, capability gates, targeted rollout, or release-control abstraction independent of programming language and provider.
 ---
 

@@ -1,6 +1,5 @@
 ---
 name: deployless-operational-safety-traces-migrations-any-language
-summary: Add production-style safety for any-language deployless mainline workflows through traces, replay tests, observability, rollback, and expand-contract migrations.
 description: Use this skill after mainline deployment and runtime release controls are designed, when the repository needs operational safeguards that make continuous production deployment safe across languages and runtimes.
 ---
 
@@ -19,6 +18,7 @@ The skill focuses on:
 - kill switches and rollback drills
 - expand-contract data migrations
 - compatibility checks across versions
+- traceability from AI-authored changes to issue, PR, deploy, flag, and rollback evidence
 
 ## Preconditions
 
@@ -58,6 +58,7 @@ Long-lived branches hide risk by delaying integration. This model reduces risk b
 - Background jobs and scheduled tasks
 - Data retention and privacy constraints
 - Incident response docs
+- AI PR intake docs, agent handoff notes, and PR metadata conventions
 
 ## Trace context requirements
 
@@ -72,6 +73,7 @@ environment
 operation name
 actor or tenant opaque key when needed
 release-control decisions
+change_source or pr_author_type when useful
 ```
 
 The exact mechanism depends on runtime:
@@ -90,6 +92,7 @@ The exact mechanism depends on runtime:
 - Prefer structured logs over free-text logs for operational events.
 - Include version and trace IDs in error reports.
 - Record feature flag key and variant in traces when it affects behavior.
+- Record deployment and PR metadata in release or deployment markers when available.
 - Avoid high-cardinality labels in metrics.
 - Do not log secrets, raw tokens, payment data, or sensitive personal information.
 - Sample high-volume traces, but keep error traces.
@@ -129,7 +132,9 @@ Use existing conventions first.
 4. Add flag permutations for flagged behavior.
 5. Validate expected outputs, status codes, events, state changes, or golden snapshots.
 6. Run replay tests in CI before deployment.
-7. Document how to add new fixtures during incidents or product launches.
+7. Document how to add new fixtures during incidents, product launches, or AI-authored changes to critical paths.
+
+For AI-authored PRs, require replay or regression evidence when the PR touches a critical path and existing tests do not describe the intended behavior.
 
 ## Flag-aware test matrix
 
@@ -294,6 +299,7 @@ Create or update:
 - migration-safety docs and checks
 - rollback docs
 - smoke checks in CI/CD
+- AI PR evidence requirements for critical paths
 - `docs/deployless-mainline-plan.md`, appending operational safety status
 
 ## Acceptance criteria
@@ -307,6 +313,7 @@ This skill is complete when:
 - data migrations follow expand-contract rules or the repo is confirmed stateless
 - rollback behavior is documented
 - smoke checks exist for the deployment path or the blocker is documented
+- AI-authored changes to critical paths require traceable validation or a documented test gap
 
 ## Anti-goals
 
