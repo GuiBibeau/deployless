@@ -1,6 +1,6 @@
 # Deployless
 
-Codex skills for moving a repository toward deployless delivery.
+Agent skills for moving a repository toward deployless delivery.
 
 Deployless does not mean "no deployments." It means deployments become mechanical: every safe change merges to one mainline and moves through an automated path, while user-facing release is controlled separately at runtime with flags, kill switches, routing, config, or capability gates.
 
@@ -29,33 +29,40 @@ The result is a delivery model where:
 
 The skills are language-agnostic. They can be applied to services, frontends, CLIs, libraries, mobile apps, infrastructure repos, serverless functions, and monorepos.
 
-Each skill follows the standard Codex skill layout:
+Each skill follows the standard skill layout:
 
 ```text
-skill-name/
-  SKILL.md
-  agents/openai.yaml
+skills/
+  skill-name/
+    SKILL.md
+    agents/openai.yaml
 ```
 
 ## Install
 
-Clone this repository, then copy the skill directories into your Codex skills directory:
+Install the full package with the `skills` CLI:
 
 ```sh
-git clone https://github.com/GuiBibeau/deployless.git
-cd deployless
-
-DEST="${CODEX_HOME:-$HOME/.codex}/skills"
-mkdir -p "$DEST"
-cp -R deployless-audit "$DEST/"
-cp -R deployless-mainline "$DEST/"
-cp -R deployless-release-controls "$DEST/"
-cp -R deployless-production-path "$DEST/"
-cp -R deployless-operational-safety "$DEST/"
-cp -R deployless-ai-pr-governance "$DEST/"
+npx skills add GuiBibeau/deployless
 ```
 
-Restart Codex or start a new session so the skills are discovered.
+Install one skill from the package:
+
+```sh
+npx skills add GuiBibeau/deployless --skill deployless-audit
+```
+
+Install non-interactively for a specific agent:
+
+```sh
+npx skills add GuiBibeau/deployless --skill '*' --agent <agent-name> --yes
+```
+
+List the package contents without installing:
+
+```sh
+npx skills add GuiBibeau/deployless --list
+```
 
 ## Use
 
@@ -76,6 +83,10 @@ Use $deployless-ai-pr-governance.
 ```
 
 The audit should create or update `docs/deployless-mainline-plan.md`. Later skills append implementation details and safety guidance to that plan.
+
+## Registry
+
+The package is installable from GitHub with `npx skills add GuiBibeau/deployless`. The public skills directory discovers packages from install and discovery activity; there is no separate publish command to run for this repository.
 
 ## Recommended rollout
 
